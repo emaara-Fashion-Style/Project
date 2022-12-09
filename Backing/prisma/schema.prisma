@@ -12,7 +12,85 @@ datasource db {
 
 enum Roles{
   Admin
-  SupperAdmin
+  Supperadmin
   User
 }
 
+model Users {
+  userID     Int       @id @default(autoincrement())
+  firstname  String
+  lastname   String
+  U_email    String    @unique
+  U_password String
+  U_phone    String   @unique 
+  U_Address  String
+  JiondAt    DateTime  @default(now())
+  Role       Roles     @default(User)
+  //Relation
+  order      Order[]
+  product    Product[]
+  Reviews     Reviews[]
+  cart       Cart[]
+}
+
+
+model Order {
+  order_Id   Int         @id @default(autoincrement())
+  // products         Json[]
+  delivery_price   Float
+  items_price      Float    
+  totalPrice       Float
+  isPaid   Boolean     @default(false)
+  CreateAt DateTime    @default(now())
+  UserID     Int
+  User  Users  @relation(fields: [UserID], references: [userID]) 
+}
+
+
+model Product {
+  pro_id     Int       @id @default(autoincrement())
+  name   String
+  price  Float
+  description String
+  image String
+  discount    Int       @default(0)
+  stockQty  Int
+  UserID     Int
+  category_id  Int
+  Customer    Users     @relation(fields: [UserID], references: [userID])
+  Category    Category  @relation(fields: [category_id], references: [category_ID])
+  cart       Cart[]
+  reviews    Reviews[]
+ 
+}
+
+
+model Category {
+  category_ID Int  @id @default(autoincrement())
+  type        String
+  img         String
+  product     Product[]
+}
+
+
+
+model Reviews {
+  Rev_ID      Int      @id @default(autoincrement())
+  Userid     Int
+  product_id Int
+  body      String
+  rating     Int
+  cratedAt    DateTime @default(now())
+  // updatedAt  DateTime @updatedAt
+  User Users    @relation(fields: [Userid], references: [userID])
+  Product Product @relation(fields: [product_id], references: [pro_id])
+}
+
+model Cart {
+  Cart_ID     Int     @id @default(autoincrement())
+  UserID     Int
+  Pro_ID     Int
+  Quantity   Int     @default(0)
+  Product    Product @relation(fields: [Pro_ID], references: [pro_id])
+  User Users   @relation(fields: [UserID], references: [userID])
+}
