@@ -19,7 +19,7 @@ enum Roles{
 model Users {
   userID     Int       @id @default(autoincrement())
   firstname  String
-  lastname   String
+  lastname   String  
   U_email    String    @unique
   U_password String
   U_phone    String   @unique 
@@ -57,7 +57,7 @@ model Product {
   stockQty  Int
   UserID     Int
   category_id  Int
-  Customer    Users     @relation(fields: [UserID], references: [userID])
+  user   Users     @relation(fields: [UserID], references: [userID])
   Category    Category  @relation(fields: [category_id], references: [category_ID])
   cart       Cart[]
   reviews    Reviews[]
