@@ -10,36 +10,15 @@ const generatetToken = (user) => {
     })
 }
 
-
-
-
-
-
-
 //=========================================================Registertion start=================================================
 
 
 const Registertion = async (req, res) => {
-    const { name, lastname, email, password, phone, address } = req.body;
+    const {fname, lname, email, password, phone, address } = req.body;
 
     //==============================ChekUsers start==================================================>
 
-    const CheckUser = await prisma.users.findFirst({
-        where: {
-            email,
-        },
-    });
-
-    if (CheckUser) {
-        res.json({
-            status: "Erorr",
-            message: "Username is already exist"
-        })
-        return;
-    }
-
-
-    if (!name || !lastname || !email || !password || !phone || !address) {
+    if (!fname || !lname || !email || !password || !phone || !address) {
         res.json({
             status: "Something is worng",
             message: "please Checking Data"
@@ -48,23 +27,25 @@ const Registertion = async (req, res) => {
     }
     const Newuser = await prisma.users.create({
         data: {
-            firstname: name,
-            lastname: lastname,
+            firstname: fname,
+            lastname: lname,
             U_email: email,
             U_password: password,
             U_phone: phone,
             U_Address: address
         },
     });
-
-
-
-    const token = generatetToken(Newuser.userID)
-    res.json({
-        user: { ...Newuser },
-        token,
-        status: "Success",
-    });
+   res.json({
+    status:"Success",
+    message:"Sucessfully save",
+    Newuser
+   })
+    // const token = generatetToken(Newuser.userID)
+    // res.json({
+    //     user: { ...Newuser },
+    //     token,
+    //     status: "Success",
+    // });
 
 };
 

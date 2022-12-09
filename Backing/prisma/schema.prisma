@@ -43,6 +43,7 @@ model Order {
   isPaid   Boolean     @default(false)
   CreateAt DateTime    @default(now())
   UserID     Int
+  U_Address String
   User  Users  @relation(fields: [UserID], references: [userID]) 
 }
 
