@@ -4,9 +4,9 @@ const bcrypt = require('bcrypt');
 const Jwt = require('jsonwebtoken');
 
 //Token Generator
-const generatetToken = (user) => {
-    return Jwt.sign({ user }, process.env.JWT_SEC, {
-        expiresIn: "4day"
+const generatetToken = (Users) => {
+    return Jwt.sign({ Users }, process.env.JWT_SEC, {
+        expiresIn: "40d"
     })
 }
 
@@ -14,38 +14,47 @@ const generatetToken = (user) => {
 
 
 const Registertion = async (req, res) => {
-    const { fname, lname, email, password, phone, address } = req.body;
+    try {
+        const { fname, lname, email, password, phone, address } = req.body;
+        
+        console.log(req.body)
 
-    //==============================ChekUsers start==================================================>
+        //==============================ChekUsers start==================================================>
 
-    if (!fname || !lname || !email || !password || !phone || !address) {
-        res.json({
-            status: "Something is worng",
-            message: "please Checking Data"
+        if (!fname || !lname || !email || !password || !phone || !address) {
+            res.json({
+                status: "Something is worng",
+                message: "please Checking Data"
+            });
+            return;
+        }
+        const Newuser = await prisma.users.create({
+            data: {
+                firstname: fname,
+                lastname: lname,
+                U_email: email,
+                U_password: password,
+                U_phone: phone,
+                U_Address: address
+            },
         });
-        return;
+        res.json({
+            status: "Success",
+            message: "Sucessfully save",
+            Newuser
+        })
+        const token = generatetToken(Newuser.userID)
+        res.json({
+            user: { ...Newuser },
+            token,
+            status: "Success",
+        });
+    } catch (error) {
+        res.json({
+            error
+        })
     }
-    const Newuser = await prisma.users.create({
-        data: {
-            firstname: fname,
-            lastname: lname,
-            U_email: email,
-            U_password: password,
-            U_phone: phone,
-            U_Address: address
-        },
-    });
-    res.json({
-        status: "Success",
-        message: "Sucessfully save",
-        Newuser
-    })
-    const token = generatetToken(Newuser.userID)
-    res.json({
-        user: { ...Newuser },
-        token,
-        status: "Success",
-    });
+
 
 };
 
