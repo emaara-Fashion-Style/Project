@@ -14,7 +14,7 @@ const generatetToken = (user) => {
 
 
 const Registertion = async (req, res) => {
-    const {fname, lname, email, password, phone, address } = req.body;
+    const { fname, lname, email, password, phone, address } = req.body;
 
     //==============================ChekUsers start==================================================>
 
@@ -35,17 +35,17 @@ const Registertion = async (req, res) => {
             U_Address: address
         },
     });
-   res.json({
-    status:"Success",
-    message:"Sucessfully save",
-    Newuser
-   })
-    // const token = generatetToken(Newuser.userID)
-    // res.json({
-    //     user: { ...Newuser },
-    //     token,
-    //     status: "Success",
-    // });
+    res.json({
+        status: "Success",
+        message: "Sucessfully save",
+        Newuser
+    })
+    const token = generatetToken(Newuser.userID)
+    res.json({
+        user: { ...Newuser },
+        token,
+        status: "Success",
+    });
 
 };
 
