@@ -27,13 +27,16 @@ const Registertion = async (req, res) => {
                 message: "please Checking Data"
             });
             return;
+            
         }
+        const salt = bcrypt.genSaltSync(10)
+        const Hidepassword = bcrypt.hashSync(password,salt)
         const Newuser = await prisma.users.create({
             data: {
                 firstname: fname,
                 lastname: lname,
                 U_email: email,
-                U_password: password,
+                U_password: Hidepassword,
                 U_phone: phone,
                 U_Address: address
             },
@@ -93,7 +96,7 @@ const Login = async (req, res, next) => {
         });
         return;
     }
-
+   
     const dehshepassword = bcrypt.compareSync(password, UserExisting.U_password);
     if (dehshepassword) {
         const token = generatetToken(UserExisting.userID);
@@ -103,6 +106,8 @@ const Login = async (req, res, next) => {
             token,
             user: UserExisting,
         });
+        
+
     } else {
         res.json({
             status: "Error",
@@ -110,6 +115,13 @@ const Login = async (req, res, next) => {
         })
     }
 }
+
+
+
+
+
+
+
 
 
 
