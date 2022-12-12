@@ -5,7 +5,7 @@ const router = express.Router();
 const productController = require("../controllers/productController")
 
 // GET ALL
-router.get('/all', productController.getProducts);
+router.get('/all', productController.GetProducts);   
 router.get('/all/cats', productController.getCats);
 router.get('/all/reviews', productController.getReviewsOfProduct);
 

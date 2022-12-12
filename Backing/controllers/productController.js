@@ -4,7 +4,7 @@ import cloudinary from "../cloud/cloudinary"
 
 // GET ALL Products  every one even users 
 
-const getProducts = async (req, res) => {
+const GetProducts = async (req, res) => {
     try {
       const allProducts = await prisma.Product.findMany({
         include: {
@@ -225,7 +225,7 @@ export const getOneProduct = async (req, res) => {
 
 
   module.exports = {
-    getProducts,
+    GetProducts,
     getCats,
     getReviewsOfProduct,
     createProduct,
