@@ -137,16 +137,16 @@ const Updateusers = async (req, res, next) => {
         const { firstname, lastname, email, password, phone, Address } = req.body;
         const { Userid } = req.params;
 
-        if (firstname, lastname, email, password, phone, Address) {
+        if (!firstname ||! lastname ||! email ||!password ||! phone ||!Address) {
             res.json({
                 status: "Errorr",
-                message: "Fadlan iska sax",
+                message: "please provider information",
             })
             return;
         }
         const findUsers = await prisma.users.findFirst({
             where: {
-                userID: parseInt(Userid)
+                userID:(Userid)
             },
         });
         if (!findUsers) {

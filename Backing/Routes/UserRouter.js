@@ -8,7 +8,7 @@ router.post('/new', userControllers.Registertion)
 router.get('/Get', userControllers.Getallusers)
 router.post('/login', userControllers.Login)
 router.get("/getnoe", userControllers.GetOneuser)
-router.patch("/upadte", userControllers.Updateusers)
+router.put("/upadte:userID", userControllers.Updateusers,)
 router.delete("/delete", userControllers.DeleteUser)
 
 module.exports = router;
