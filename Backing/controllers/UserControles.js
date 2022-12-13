@@ -16,7 +16,7 @@ const generatetToken = (Users) => {
 const Registertion = async (req, res) => {
     try {
         const { fname, lname, email, password, phone, address } = req.body;
-        
+
         console.log(req.body)
 
         //==============================ChekUsers start==================================================>
@@ -27,10 +27,10 @@ const Registertion = async (req, res) => {
                 message: "please Checking Data"
             });
             return;
-            
+
         }
         const salt = bcrypt.genSaltSync(10)
-        const Hidepassword = bcrypt.hashSync(password,salt)
+        const Hidepassword = bcrypt.hashSync(password, salt)
         const Newuser = await prisma.users.create({
             data: {
                 firstname: fname,
@@ -65,12 +65,7 @@ const Registertion = async (req, res) => {
 
 
 
-
-
-
-
 //=========================================================Loging=========================================================================>
-
 
 const Login = async (req, res, next) => {
     const { email, password } = req.body;
@@ -96,7 +91,7 @@ const Login = async (req, res, next) => {
         });
         return;
     }
-   
+
     const dehshepassword = bcrypt.compareSync(password, UserExisting.U_password);
     if (dehshepassword) {
         const token = generatetToken(UserExisting.userID);
@@ -106,7 +101,7 @@ const Login = async (req, res, next) => {
             token,
             user: UserExisting,
         });
-        
+
 
     } else {
         res.json({
@@ -120,72 +115,59 @@ const Login = async (req, res, next) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 //========================================================update ==========================================================================>
-const Updateusers = async (req, res, next) => {
-    try {
-        const { firstname, lastname, email, password, phone, Address } = req.body;
-        const { Userid } = req.params;
 
-        if (!firstname ||! lastname ||! email ||!password ||! phone ||!Address) {
+const UpdateUser = async (req, res, next) => {
+    try {
+        const { fname, lname, email, password, phone, address } = req.body;
+        const { userID } = req.params
+        if (!fname || !lname || !email || !password || !phone || !address) {
             res.json({
-                status: "Errorr",
-                message: "please provider information",
+                status: "Erorr",
+                message: "please checking Data "
             })
             return;
         }
-        const findUsers = await prisma.users.findFirst({
+        const FINDUser = await prisma.users.findFirst({
             where: {
-                userID:(Userid)
-            },
+                userID: + userID,
+            }
         });
-        if (!findUsers) {
+        if (!FINDUser) {
             res.json({
                 status: "Erorr",
-                message: "User Is Not Found Database"
-            });
-            return;
+                message: "User Is not Found In Database"
+            })
+            return
         }
-
-        const updateUsers = await prisma.users.update({
+        const updateusers = await prisma.users.update({
             where: {
-                userID: parseInt(Userid),
+                userID: parseInt(userID)
             },
             data: {
-                firstname: firstname,
-                lastname: lastname,
+                firstname: fname,
+                lastname: lname,
                 U_email: email,
                 U_password: password,
                 U_phone: phone,
-                U_Address: Address
+                U_Address: address
             },
         });
-        res.status({
-            status: "Success",
-            message: "User Update Successfully",
-            updateUsers
+        res.status.json(200).json({
+            status: "Sucess",
+            message:"Update Sucessfully",
+            updateusers
         })
     } catch (error) {
-        res.json({
-            Error
-        })
+          res.json({
+            status:"Erorr",
+          });
     }
-}
+};
 
 
 
-
-
+console.log(UpdateUser)
 
 
 
@@ -275,8 +257,8 @@ const Getallusers = async (req, res) => {
 module.exports = {
     Registertion,
     Login,
-    Updateusers,
     Getallusers,
     GetOneuser,
-    DeleteUser
+    DeleteUser,
+    UpdateUser
 }
