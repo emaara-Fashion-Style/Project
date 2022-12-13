@@ -4,7 +4,6 @@ const dotenv =require("dotenv")
 dotenv.config();
 app.use(express.json())
  const port  = process.env.port
-
  const Userrouters = require('./Routes/UserRouter')
 app.use('/api/users/', Userrouters)
 

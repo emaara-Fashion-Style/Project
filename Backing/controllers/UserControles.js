@@ -146,7 +146,7 @@ const UpdateUser = async (req, res, next) => {
             },
             data: {
                 firstname: fname,
-                lastname: lname,
+                lastname: lname,  
                 U_email: email,
                 U_password: password,
                 U_phone: phone,
@@ -155,23 +155,15 @@ const UpdateUser = async (req, res, next) => {
         });
         res.status.json(200).json({
             status: "Sucess",
-            message:"Update Sucessfully",
+            message: "Update Sucessfully",
             updateusers
         })
     } catch (error) {
-          res.json({
-            status:"Erorr",
-          });
+        res.json({
+            status: "Erorr",
+        });
     }
 };
-
-
-
-console.log(UpdateUser)
-
-
-
-
 
 
 //=========================================================Get one user =================================================================>
@@ -181,7 +173,7 @@ const GetOneuser = async (req, res) => {
         const { userID } = req.params;
         const user = await prisma.users.findFirst({
             where: {
-                userID: +userID,
+                userID: + userID,
             },
         });
         if (!user) {
@@ -211,11 +203,11 @@ const GetOneuser = async (req, res) => {
 
 //=========================================================Delete Users===================================================================>
 const DeleteUser = async (req, res,) => {
-    const { UserID } = req.params;
+    const { userID } = req.params;
 
     const USRER = await prisma.users.delete({
         where: {
-            UserID: parseInt(UserID)
+            userID: parseInt(userID)
         },
     });
     res.json({
