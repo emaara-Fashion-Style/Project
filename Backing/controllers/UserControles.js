@@ -70,7 +70,7 @@ const Login = async (req, res, next) => {
     if (!email || !password) {
         res.json({
             status: "Error",
-            message: "email or password nor mistake"
+            message: "email or password is wrong"
         })
         return;
     }
@@ -84,7 +84,7 @@ const Login = async (req, res, next) => {
     if (!UserExisting) {
         res.json({
             status: "Error",
-            message: "credentails"
+            message: " Wrong credentails"
         });
         return;
     }
