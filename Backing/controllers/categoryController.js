@@ -39,6 +39,41 @@ const CreateCategory = async(req,res,next)=>{
 
 
 
+//=========================================>>  Geting Category 
+
+const GetallCategory = async (req,res) => {
+  try {
+    const Category = await prisma.Category.findMany();
+    res.json({
+    Category
+    });
+  } catch (error) {
+    res.json({
+      status: "Error",
+      message: "Data is not Found"
+    });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports= {
- CreateCategory
+ CreateCategory,
+ GetallCategory
 }

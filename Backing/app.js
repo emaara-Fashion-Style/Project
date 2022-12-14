@@ -7,7 +7,7 @@ const port = process.env.port
 const Userrouters = require('./Routes/UserRouter')
 const Categoryrouetr = require('./Routes/categoryRoute')
 app.use('/api/users/', Userrouters,)
-app.use('api/Category', Categoryrouetr)
+app.use('api/Cg', Categoryrouetr)
 
 
   
