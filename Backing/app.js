@@ -1,20 +1,16 @@
-const express=require ("express")
+const express = require("express")
 const app = express();
-const dotenv =require("dotenv")
+const dotenv = require("dotenv")
 dotenv.config();
 app.use(express.json())
- const port  = process.env.port
- const Userrouters = require('./Routes/UserRouter')
-app.use('/api/users/', Userrouters)
+const port = process.env.port
+const Userrouters = require('./Routes/UserRouter')
+const Categoryrouetr = require('./Routes/categoryRoute')
+app.use('/api/users/', Userrouters,)
+app.use('api/Category', Categoryrouetr)
 
 
-
-
-
-
-
-
-
+  
 
 
 

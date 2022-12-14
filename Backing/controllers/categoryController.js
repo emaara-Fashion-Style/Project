@@ -1,104 +1,44 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const {PrismaClient} =require("@prisma/client")
+const prisma =new PrismaClient();
 
-// get all catogries  Every one can accsess
 
-const allCats = async (req, res) => {
-    try {
-      const categories = await prisma.Category.findMany();
+//==========================>>Create Category ======>>
+
+const CreateCategory = async(req,res,next)=>{
+ try {
+    const {type , images}= req.body;
+
+    if(!type  ||! images){
       res.json({
-        success: true,
-        categories,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-        error,
-      });
+        status:"Erorr",
+        message:"Please provider Data"
+      })
+      return;
     }
-  };
+   const NewCategory = await prisma.Category.create ({
+    data:{
+      type :type,
+      images: images
+    },
+   });
+   res.json({
+    status:"Successfuly",
+    message: "saved Category",
+    NewCategory
+   });
 
-//   Add CATEGORY ONLY FOR ADMINS
-
-const createCategory = async (req, res) => {
-    const { type, img } = req.body;
-    try {
-      const category = await prisma.Category.create({
-        data: {
-          type,
-          img ,
-        },
-      });
+ } catch (error) {
       res.json({
-        success: true,
-        category,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-        error,
-      });
-    }
-  };
-  
-
-//   UPDATE CATEGORY ONLY FOR ADMIN
-
-const updateCategory = async (req, res) => {
-    const { type, img, id } = req.body;
-  
-    try {
-      const category = await prisma.Category.update({
-        where: {
-          category_ID: Number(id),
-        },
-        data: {
-          type,
-          img,
-        },
-      });
-  
-      res.json({
-        success: true,
-        category,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-        error,
-      });
-    }
-  };
-  
-
-//   DELETE CATEGORY ONLY FOR ADMIN
+        status:"Erorr"
+      })
+ }
+};
 
 
-const deleteCategory = async (req, res) => {
-    const { id } = req.body;
-    try {
-      const category = await prisma.Category.delete({
-        where: {
-          category_ID: Number(id),
-        },
-      });
-  
-      res.json({
-        success: true,
-        category,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-        error,
-      });
-    }
-  };
-  
-  
-  module.exports ={
-    allCats,
-    deleteCategory,
-    updateCategory,
-    createCategory
-  }
+
+
+
+
+module.exports= {
+ CreateCategory
+}

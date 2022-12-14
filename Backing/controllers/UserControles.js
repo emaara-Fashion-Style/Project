@@ -10,16 +10,13 @@ const generatetToken = (Users) => {
     })
 }
 
-//=========================================================Registertion start=================================================
+//==========================Registertion start============================>
 
 
 const Registertion = async (req, res) => {
     try {
         const { fname, lname, email, password, phone, address } = req.body;
 
-        console.log(req.body)
-
-        //==============================ChekUsers start==================================================>
 
         if (!fname || !lname || !email || !password || !phone || !address) {
             res.json({
@@ -146,14 +143,14 @@ const UpdateUser = async (req, res, next) => {
             },
             data: {
                 firstname: fname,
-                lastname: lname,  
+                lastname: lname,
                 U_email: email,
                 U_password: password,
                 U_phone: phone,
                 U_Address: address
             },
         });
-        res.status.json(200).json({
+        res.status(200).json({
             status: "Sucess",
             message: "Update Sucessfully",
             updateusers
@@ -173,7 +170,7 @@ const GetOneuser = async (req, res) => {
         const { userID } = req.params;
         const user = await prisma.users.findFirst({
             where: {
-                userID: + userID,
+                userID: +userID,
             },
         });
         if (!user) {

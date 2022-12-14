@@ -57,13 +57,13 @@ model Product {
   UserID      Int
   category_id Int
   user        Users     @relation(fields: [UserID], references: [userID])
-  Category    Category  @relation(fields: [category_id], references: [category_ID])
+  Category    Category  @relation(fields: [category_id], references: [Cat_ID])
   cart        Cart[]
   reviews     Reviews[]
 }
 
 model Category {
-  category_ID Int       @id @default(autoincrement())
+  Cat_ID Int       @id @default(autoincrement())
   type        String
   img         String
   product     Product[]
