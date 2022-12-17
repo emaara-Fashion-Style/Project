@@ -16,50 +16,36 @@ enum Roles {
   User
 }
 
-<<<<<<< HEAD
 enum Paids {
   isPaid
   notPaid
 }
-=======
-// enum Roles1 {
-//   Is_paid
-//   Not_paid
-// }
 
->>>>>>> 4b78a59c3bf0974445ddc8f108620f1344bb9ee0
-
-model Users {
-  userID     Int        @id @default(autoincrement())
-  firstname  String
-  lastname   String
-  U_email    String     @unique
-  U_password String
-<<<<<<< HEAD
-  U_phone    String     @unique
-=======
-  U_phone    String   @unique 
->>>>>>> 4b78a59c3bf0974445ddc8f108620f1344bb9ee0
-  U_Address  String
-  JiondAt    DateTime   @default(now())
-  Role       Roles      @default(User)
-  //Relation
-  order      Order[]
-<<<<<<< HEAD
-  product    Products[]
-  Reviews    Reviews[]
-=======
-  product    Product[]
-  Reviews     Reviews[]
->>>>>>> 4b78a59c3bf0974445ddc8f108620f1344bb9ee0
-  cart       Cart[]
+enum Roles1 {
+  Is_paid
+  Not_paid
 }
 
+model Users {
+  userID     Int    @id @default(autoincrement())
+  firstname  String
+  lastname   String
+  U_email    String @unique
+  U_password String
+
+  U_phone   String    @unique
+  U_Address String
+  JiondAt   DateTime  @default(now())
+  Role      Roles     @default(User)
+  //Relation
+  order     Order[]
+  product   Products[]
+  Reviews   Reviews[]
+  cart      Cart[]
+}
 
 model Order {
-  order_Id   Int         @id @default(autoincrement())
-  // products         Json[]
-<<<<<<< HEAD
+  order_Id       Int      @id @default(autoincrement())
   delivery_price Float
   items_price    Float
   totalPrice     Float
@@ -82,64 +68,24 @@ model Products {
   category_id Int
   user        Users     @relation(fields: [UserID], references: [userID])
   Category    Category  @relation(fields: [category_id], references: [Cat_ID])
-  cart        Cart[]
-  reviews     Reviews[]
-=======
-  delivery_price   Float
-  items_price      Float    
-  totalPrice       Float
-  isPaid   Boolean     @default(false)
-  CreateAt DateTime    @default(now())
-  U_Address String
-  UserID     Int
-  User  Users  @relation(fields: [UserID], references: [userID]) 
+  cart Cart[]
+  re Reviews[]
 }
-
-
-model Product {
-  pro_id    Int       @id @default(autoincrement())
-  name   String
-  price  Float
-  description String
-  image String
-  discount    Int       @default(0)
-  stockQty  Int?
-  UserID     Int
-  category_id  Int
-  Customer    Users     @relation(fields: [UserID], references: [userID])
-  Category    Category  @relation(fields: [category_id], references: [category_ID])
-  cart       Cart[]
-  reviews    Reviews[]
- 
->>>>>>> 4b78a59c3bf0974445ddc8f108620f1344bb9ee0
-}
-
 
 model Category {
-<<<<<<< HEAD
-  Cat_ID  Int        @id @default(autoincrement())
+  Cat_ID  Int       @id @default(autoincrement())
   type    String
   img     String
   product Products[]
-=======
-  category_ID Int  @id @default(autoincrement())
-  type        String
-  img         String
-  product     Product[]
->>>>>>> 4b78a59c3bf0974445ddc8f108620f1344bb9ee0
 }
 
-
-
 model Reviews {
-  Rev_ID      Int      @id @default(autoincrement())
+  Rev_ID     Int      @id @default(autoincrement())
   Userid     Int
   product_id Int
-  body      String
+  body       String
   rating     Int
-  cratedAt    DateTime @default(now())
-  // updatedAt  DateTime @updatedAt
-<<<<<<< HEAD
+  cratedAt   DateTime @default(now())
   User       Users    @relation(fields: [Userid], references: [userID])
   Product    Products @relation(fields: [product_id], references: [pro_id])
 }
@@ -151,17 +97,4 @@ model Cart {
   Quantity Int      @default(0)
   Product  Products @relation(fields: [Pro_ID], references: [pro_id])
   User     Users    @relation(fields: [UserID], references: [userID])
-=======
-  User Users    @relation(fields: [Userid], references: [userID])
-  Product Product @relation(fields: [product_id], references: [pro_id])
-}
-
-model Cart {
-  Cart_ID     Int     @id @default(autoincrement())
-  UserID     Int
-  Pro_ID     Int
-  Quantity   Int     @default(0)
-  Product    Product @relation(fields: [Pro_ID], references: [pro_id])
-  User Users   @relation(fields: [UserID], references: [userID])
->>>>>>> 4b78a59c3bf0974445ddc8f108620f1344bb9ee0
 }
