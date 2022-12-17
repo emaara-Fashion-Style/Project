@@ -1,235 +1,189 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-import cloudinary from "../cloud/cloudinary"
 
-// GET ALL Products  every one even users 
 
-const GetProducts = async (req, res) => {
-    try {
-      const allProducts = await prisma.Product.findMany({
-        include: {
-          Reviews: true,
-          Category: true,
-        },
-      });
-  
+
+
+//==========================Createproduct start============================>
+
+
+const Createproducts = async (req, res) => {
+  try {
+    const { Name, Price, Disc, Dis, Img, Qtity } = req.body;
+
+
+    if (!Name || !Price || !Disc || !Dis || !Img || !Qtity) {
       res.json({
-        success: true,
-        allProducts,
+        status: "Something is worng",
+        message: "please Checking Data"
       });
-    } catch (error) {
-      res.json({
-        success: false,
-        msg: error,
-      });
+      return;
+
     }
-  };
+
+    const Newuser = await prisma.Products.create({
+      data: {
+        Pro_name: Name,
+        Pro_price: Price,
+        Pro_desc: Disc,
+        Pro_dic: Dis,
+        Pro_iamse: Img,
+        Pro_qtity: Qtity
+      },
+    });
+    res.json({
+      status: "Success",
+      message: "Sucessfully save",
+      Newuser
+    })
+
+  } catch (error) {
+    error
+    res.json({
+      status: "Error",
+      message: "something is wrong"
+    })
+  }
+
+
+};
 
 
 
-  // get Catogories
 
-  export const getCats = async (req, res) => {
-    try {
-      const categories = await prisma.Category.findMany();
+const GetProduct = async (req, res) => {
+  try {
+    const product = await prisma.Products.findMany();
+    res.json({
+      product
+    });
+  } catch (error) {
+    res.json({
+      status: "Error",
+      message: "Data is not Found"
+    });
+  }
+};
+
+
+
+
+//================================================>>Update
+
+const Updateproduct = async (req, res, next) => {
+  try {
+    const { Name, Price, Disc, Img, Dis, Qtity } = req.body;
+    const { pro_id } = req.params
+    if (!Name || !Price || !Disc || !Img || !Dis || !Qtity) {
       res.json({
-        success: true,
-        categories,
-      });
-    } catch (error) {
-      res.json(error);
+        status: "Erorr",
+        message: "please checking Data "
+      })
+      return;
     }
-  };
-
-
-  // get all reviews or comments  every one can read
-
-  const getReviewsOfProduct = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const allReviews = await prisma.Reviews.findMany({
-        where: {
-            pro_id: Number(id),
-        },
-        include: {
-          Users: true,
-        },
-      });
-      res.json({ success: true, allReviews });
-    } catch (error) {
-      res.json({
-        success: false,
-        msg: error,
-      });
-    }
-  };
-  
-
-
-
-  // GET ONE PRODUCT
-  // Every body can filter
-
-export const getOneProduct = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const result = await prisma.Product.findFirst({
-        where: {
-            pro_id: Number(id),
-        },
-        include: {
-          Reviews: true,
-          Category: true,
-        },
-      });
-  
-      const allReviews = result.reviews.length;
-      const totalReviews = result.reviews.reduce((a, b) => a + b.rating, 0);
-      const average = totalReviews / allReviews;
-  
-      res.json({
-        success: true,
-        result,
-        average,
-        allReviews,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-        msg: error,
-      });
-    }
-  };
-
-
-
-  //  creating product  only for Admin
-  
-  const createProduct = async (req, res) => {
-    const { name, description, price, stockQty, category_ID } = req.body;
-    try {
-      const result = await cloudinary.uploader.upload(req.file.path);
-      const product = await prisma.Product.create({
-        data: {
-            name,
-            description,
-            price: Number(price),
-            stockQty: Number(stockQty),
-            category_ID: categoryId ? Number(category_ID) : 1,
-            category_ID: result.secure_url,
-        //   adminUser: Number(req.user.userId),
-        },
-      });
-      res.json({ success: true, product });
-    } catch (error) {
-      console.log(error);
-      res.json({
-        errors: {
-          msg: error,
-        },
-      });
-    }
-  };
-
-  // update product  only for Admin
-  
-  const updateProduct = async (req, res) => {
-    const { name, description, price, stockQty } = req.body;
-  
-    if (req.file) {
-      try {
-        const updatingProduct = await prisma.Product.findFirst({
-          where: {
-            pro_id: Number(req.params.id),
-          },
-        });
-  
-        await cloudinary.uploader.destroy(updatingProduct.imgId);
-        const result = await cloudinary.uploader.upload(req.file.path);
-  
-        const product = await prisma.Product.update({
-          where: {
-            pro_id: Number(req.params.id),
-          },
-          data: {
-            name,
-            description,
-            price: Number(price),
-            stockQty: Number(stockQty),
-            image: result.secure_url,
-           
-          },
-        });
-        res.json({
-          success: true,
-          product,
-        });
-      } catch (error) {
-        console.log(error);
-        res.json({
-          errors: {
-            msg: error,
-          },
-        });
+    const FindProduct = await prisma.Products.findFirst({
+      where: {
+        pro_id: + pro_id,
       }
+    });
+    if (!FindProduct) {
+      res.json({
+        status: "Erorr",
+        message: "User Is not Found In Database"
+      })
+      return
+    }
+    const Updatecate = await prisma.Products.update({
+      where: {
+        pro_id: parseInt(pro_id)
+      },
+      data: {
+        Pro_name: Name,
+        Pro_price: Price,
+        Pro_desc: Disc,
+        Pro_iamse: Img,
+        Pro_dic: Dis,
+        Pro_qtity: Qtity
+      },
+    });
+    res.status(200).json({
+      status: "Sucess",
+      message: "Update Sucessfully",
+      Updatecate
+    })
+  } catch (error) {
+    res.json({
+      error
+    });
+  }
+};
+
+
+//======================================================>>Getoneproduct
+
+const getonepro = async (req, res) => {
+  try {
+    const { pro_id } = req.params;
+    const product = await prisma.products.findFirst({
+      where: {
+        pro_id: +pro_id,
+      },
+    });
+    if (!product) {
+      res.json({
+        status: "Erorr",
+        message: "user is not fount in Database Now"
+      });
     } else {
-      try {
-        const product = await prisma.Product.update({
-          where: {
-            productId: Number(req.params.id),
-          },
-          data: {
-            name,
-            description,
-            price: Number(price),
-            stockQty: Number(stockQty),
-          },
-        });
-        res.json({
-          success: true,
-          product,
-        });
-      } catch (error) {
-        console.log(error);
-        res.json({
-          errors: {
-            msg: error,
-          },
-        });
-      }
-    }
-  };
-  
-
-  // deleting product  only for Admin
-
-   const deleteItem = async (req, res) => {
-    try {
-      const { productId } = req.body;
-      const deletingItem = await prisma.product.delete({
-        where: {
-          productId,
-        },
-      });
       res.json({
-        success: true,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-      });
+        status: "Success",
+        user
+      })
     }
+  } catch (error) {
+    res.json({
+      Error
+    });
   };
+}
+
+
+
+//===================================================>>deleteproduct
+const Deleteproduct = async (req, res,) => {
+  const { pro_id } = req.params;
+
+  const PRODUCTS = await prisma.products.delete({
+    where: {
+      pro_id: parseInt(pro_id)
+    },
+  });
+  res.json({
+    status: "Success",
+    message: "Users Delete SuccessFull!",
+    PRODUCTS
+  })
+}
 
 
 
 
-  module.exports = {
-    GetProducts,
-    getCats,
-    getReviewsOfProduct,
-    createProduct,
-    getOneProduct,
-    updateProduct,
-    deleteItem
+
+
+
+
+
+
+
+
+
+
+//=========================================================Exports=======================================================================>
+
+module.exports = {
+  Createproducts,
+  Updateproduct,
+  GetProduct,
+  getonepro,
+  Deleteproduct
 }

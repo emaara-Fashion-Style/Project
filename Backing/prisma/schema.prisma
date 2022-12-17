@@ -16,19 +16,24 @@ enum Roles {
   User
 }
 
+enum Paids {
+  isPaid
+  notPaid
+}
+
 model Users {
-  userID     Int       @id @default(autoincrement())
+  userID     Int        @id @default(autoincrement())
   firstname  String
   lastname   String
-  U_email    String    @unique
+  U_email    String     @unique
   U_password String
-  U_phone    String    @unique
+  U_phone    String     @unique
   U_Address  String
-  JiondAt    DateTime  @default(now())
-  Role       Roles     @default(User)
+  JiondAt    DateTime   @default(now())
+  Role       Roles      @default(User)
   //Relation
   order      Order[]
-  product    Product[]
+  product    Products[]
   Reviews    Reviews[]
   cart       Cart[]
 }
@@ -39,21 +44,21 @@ model Order {
   delivery_price Float
   items_price    Float
   totalPrice     Float
-  isPaid         Boolean  @default(false)
+  Roles          Paids    @default(notPaid)
   CreateAt       DateTime @default(now())
   UserID         Int
   U_Address      String
   User           Users    @relation(fields: [UserID], references: [userID])
 }
 
-model Product {
+model Products {
   pro_id      Int       @id @default(autoincrement())
-  name        String
-  price       Float
-  description String
-  image       String
-  discount    Int       @default(0)
-  stockQty    Int
+  Pro_name    String
+  Pro_price   Float
+  Pro_desc    String
+  Pro_iamse   String
+  Pro_dic     Int       @default(0)
+  Pro_qtity   Int
   UserID      Int
   category_id Int
   user        Users     @relation(fields: [UserID], references: [userID])
@@ -63,10 +68,10 @@ model Product {
 }
 
 model Category {
-  Cat_ID Int       @id @default(autoincrement())
-  type        String
-  img         String
-  product     Product[]
+  Cat_ID  Int        @id @default(autoincrement())
+  type    String
+  img     String
+  product Products[]
 }
 
 model Reviews {
@@ -78,14 +83,14 @@ model Reviews {
   cratedAt   DateTime @default(now())
   // updatedAt  DateTime @updatedAt
   User       Users    @relation(fields: [Userid], references: [userID])
-  Product    Product  @relation(fields: [product_id], references: [pro_id])
+  Product    Products @relation(fields: [product_id], references: [pro_id])
 }
 
 model Cart {
-  Cart_ID  Int     @id @default(autoincrement())
+  Cart_ID  Int      @id @default(autoincrement())
   UserID   Int
   Pro_ID   Int
-  Quantity Int     @default(0)
-  Product  Product @relation(fields: [Pro_ID], references: [pro_id])
-  User     Users   @relation(fields: [UserID], references: [userID])
+  Quantity Int      @default(0)
+  Product  Products @relation(fields: [Pro_ID], references: [pro_id])
+  User     Users    @relation(fields: [UserID], references: [userID])
 }
